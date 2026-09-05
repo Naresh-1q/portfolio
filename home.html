@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Naresh Bhat · Portfolio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================= reset & tokens ================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-dark: #000000;
+      --bg-dark-2: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --text-dim: #666666;
+      --accent: #ffffff;
+      --accent-2: #e0e0e0;
+      --accent-glow: rgba(255, 255, 255, 0.3);
+      --lime: #ffffff;
+      --border-light: rgba(255, 255, 255, 0.1);
+      --font: 'Inter', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Consolas', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-dark);
+      font-family: var(--font);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #000000; }
+    ::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ffffff; }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
+
+    .tag-label {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .tag-label::before { content: '//'; color: #666666; }
+
+    .section-title {
+      font-size: 2.6rem;
+      margin-bottom: 1.6rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .section-title .brace { font-family: var(--mono); color: #ffffff; font-weight: 500; }
+
+    /* ================= glow light effect ================= */
+    .glow-light {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 40%, transparent 70%);
+      transform: translate(-50%, -50%);
+      will-change: transform;
+      transition: opacity 0.3s ease;
+    }
+    .glow-light.hidden { opacity: 0; }
+
+    /* ================= custom cursor — terminal caret ================= */
+    .cursor-caret {
+      position: fixed; top: 0; left: 0;
+      width: 2px; height: 20px;
+      background: #ffffff;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      will-change: transform, width, height, background;
+      animation: caretBlink 1s steps(1) infinite;
+      transition: width 0.18s cubic-bezier(.2,.8,.2,1), height 0.18s cubic-bezier(.2,.8,.2,1), background 0.18s;
+    }
+    .cursor-caret.hovering {
+      width: 10px; height: 10px; border-radius: 2px;
+      background: transparent; box-shadow: inset 0 0 0 1.5px #ffffff;
+      animation: none;
+    }
+    .cursor-tag {
+      position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none;
+      font-family: var(--mono); font-size: 0.68rem; color: #cccccc;
+      transform: translate(12px, -6px); opacity: 0; white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .cursor-tag.visible { opacity: 1; }
+    @keyframes caretBlink { 50% { opacity: 0; } }
+    body.no-cursor .cursor-caret, body.no-cursor .cursor-tag, body.no-cursor .glow-light { display: none; }
+
+    /* ================= scroll progress ================= */
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; height: 2.5px;
+      background: linear-gradient(90deg, #ffffff, #ffffff);
+      z-index: 1100; width: 0%;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    /* ================= navbar ================= */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      backdrop-filter: blur(16px);
+      background: rgba(0, 0, 0, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 2rem;
+      max-width: 1300px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-family: var(--mono);
+      font-size: 1.4rem; font-weight: 700; color: #ffffff;
+    }
+    .logo .dot { color: #ffffff; }
+    .nav-links {
+      display: flex;
+      gap: 2.3rem;
+      list-style: none;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .nav-links a {
+      text-decoration: none; color: #999999; font-weight: 500;
+      font-size: 0.98rem; position: relative; padding-bottom: 4px;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 0%;
+      height: 2px; background: #ffffff; transition: width 0.25s ease;
+    }
+    .nav-links a:hover { color: #ffffff; }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger toggle (mobile) */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 8px 4px;
+      z-index: 1001;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 28px;
+      height: 2.5px;
+      background: #ffffff;
+      border-radius: 4px;
+      transition: all 0.25s ease;
+      transform-origin: center;
+    }
+    .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .nav-toggle.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ================= hero ================= */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; padding-top: 5rem;
+      position: relative; overflow: hidden;
+    }
+    #particle-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      z-index: 0; opacity: 0.5;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 3rem;
+    }
+    .hero-text { flex: 1 1 460px; }
+
+    .boot-line { clip-path: inset(0 100% 0 0); }
+    .boot-line.printed { animation: printLine 0.5s steps(24) forwards; }
+    @keyframes printLine { to { clip-path: inset(0 0 0 0); } }
+
+    .hero-text .greet { display: inline-block; }
+    .hero-text h1 {
+      font-size: 4.2rem; margin-bottom: 0.3rem; min-height: 1.15em;
+      background: linear-gradient(135deg, #ffffff 30%, #cccccc 75%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      font-family: var(--font);
+    }
+    .hero-text h1.decoding { font-family: var(--mono); -webkit-text-fill-color: #ffffff; background: none; }
+    .hero-role {
+      font-family: var(--mono);
+      font-size: 1.5rem; color: #ffffff; font-weight: 600; margin-bottom: 1.3rem;
+      min-height: 2rem; display: flex; align-items: center;
+    }
+    .hero-role .caret { display: inline-block; width: 2px; height: 1.3rem; background: #ffffff; margin-left: 3px; animation: blink 1s steps(1) infinite; }
+    .hero-text p.lede {
+      color: #999999; font-size: 1.15rem; max-width: 540px; margin-bottom: 2.4rem;
+    }
+    .btn-group { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .btn {
+      padding: 0.9rem 2rem; border-radius: 40px; font-weight: 600; text-decoration: none;
+      border: none; cursor: pointer; font-size: 1rem; position: relative; display: inline-flex;
+      align-items: center; gap: 0.5rem; overflow: hidden; isolation: isolate;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .btn::before {
+      content: ''; position: absolute; inset: 0; z-index: -1;
+      transform: translateX(-100%); transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+    }
+    .btn-primary { background: #ffffff; color: #000000; box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3); font-weight: 700; }
+    .btn-primary::before { background: #cccccc; }
+    .btn-primary:hover { color: #000000; }
+    .btn-primary:hover::before { transform: translateX(0); }
+    .btn-outline { background: transparent; border: 1.5px solid #666666; color: #ffffff; }
+    .btn-outline::before { background: #1a1a1a; }
+    .btn-outline:hover { border-color: #ffffff; color: #ffffff; }
+    .btn-outline:hover::before { transform: translateX(0); }
+
+    .btn-cv {
+      background: transparent; border: 1.5px solid #ffffff; color: #ffffff;
+    }
+    .btn-cv::before { background: rgba(255,255,255,0.08); }
+    .btn-cv:hover { border-color: #ffffff; color: #ffffff; background: rgba(255,255,255,0.05); }
+
+    .hero-portrait {
+      flex: 1 1 320px; display: flex; justify-content: center; align-items: center;
+      opacity: 0; animation: portraitIn 0.8s cubic-bezier(.2,.8,.2,1) forwards 0.9s;
+    }
+    @keyframes portraitIn { from { opacity: 0; clip-path: circle(0% at 50% 50%); } to { opacity: 1; clip-path: circle(75% at 50% 50%); } }
+    .portrait-wrap { position: relative; width: 280px; height: 280px; }
+    .portrait-ring {
+      position: absolute; inset: -14px; border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+      animation: spin 22s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .portrait-circle {
+      width: 280px; height: 280px; border-radius: 50%;
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 40px rgba(255, 255, 255, 0.1);
+      animation: float 5s infinite ease-in-out;
+    }
+    .portrait-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+
+    .scroll-hint {
+      position: absolute; bottom: 2.4rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      color: #666666; font-family: var(--mono); font-size: 0.8rem; z-index: 2;
+    }
+    .scroll-hint .wheel { width: 22px; height: 36px; border: 1.5px solid #666666; border-radius: 12px; position: relative; }
+    .scroll-hint .wheel::after {
+      content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+      width: 3px; height: 7px; border-radius: 3px; background: #ffffff;
+      animation: scrolldown 1.6s ease infinite;
+    }
+    @keyframes scrolldown { 0% { opacity: 1; top: 6px; } 70% { opacity: 0; top: 18px; } 100% { opacity: 0; top: 6px; } }
+
+    /* ================= stats strip ================= */
+    .stats-strip { background: #0a0a0a; border-top: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 2.6rem 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; }
+    .stat-num { font-family: var(--mono); font-size: 2.4rem; font-weight: 700; color: #ffffff; }
+    .stat-num .plus { color: #ffffff; }
+    .stat-label { color: #999999; font-size: 0.92rem; margin-top: 0.2rem; }
+
+    /* ================= sections ================= */
+    section { padding: 6.5rem 0; }
+    .about-section { background: #000000; }
+    .about-grid { display: flex; flex-wrap: wrap; gap: 3rem; align-items: center; }
+    .about-text { flex: 2 1 400px; color: #b3b3b3; font-size: 1.12rem; }
+    .about-text .lead-line { font-size: 1.3rem; color: #ffffff; font-weight: 500; margin-bottom: 1rem; }
+    .lang-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.4rem; }
+    .lang-chips span {
+      font-family: var(--mono); font-size: 0.82rem; color: #cccccc;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.35rem 0.9rem; border-radius: 20px;
+    }
+
+    .skills-list { flex: 1 1 260px; background: #111111; padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); }
+    .skills-list h3 { margin-bottom: 1.5rem; color: #ffffff; font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; }
+    .skill-item { display: flex; justify-content: space-between; margin-bottom: 0.4rem; color: #b3b3b3; font-weight: 500; font-size: 0.95rem; }
+    .skill-item .skill-pct { font-family: var(--mono); color: #ffffff; }
+    .skill-bar { background: #1a1a1a; height: 7px; border-radius: 10px; margin-bottom: 1.2rem; overflow: hidden; }
+    .skill-fill { height: 100%; background: linear-gradient(90deg, #ffffff, #cccccc); border-radius: 10px; width: 0%; transition: width 1.3s cubic-bezier(.2,.8,.2,1); }
+
+    /* projects */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .project-card {
+      background: #111111; border-radius: 14px; padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer;
+      display: flex; flex-direction: column; position: relative;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .project-card::before, .project-card::after {
+      content: ''; position: absolute; width: 16px; height: 16px; opacity: 0;
+      transition: opacity 0.25s, transform 0.25s cubic-bezier(.2,.8,.2,1); pointer-events: none;
+    }
+    .project-card::before {
+      top: 10px; left: 10px; transform: translate(6px, 6px);
+      border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    }
+    .project-card::after {
+      bottom: 10px; right: 10px; transform: translate(-6px, -6px);
+      border-bottom: 2px solid #ffffff; border-right: 2px solid #ffffff;
+    }
+    .project-card:hover { background: #1a1a1a; border-color: rgba(255, 255, 255, 0.3); }
+    .project-card:hover::before, .project-card:hover::after { opacity: 1; transform: translate(0, 0); }
+    .project-icon { font-size: 2.3rem; color: #ffffff; margin-bottom: 1rem; }
+    .project-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .project-card .project-date { font-family: var(--mono); color: #ffffff; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.8rem; }
+    .project-card p { color: #b3b3b3; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .project-card .click-hint { margin-top: 1rem; font-size: 0.8rem; color: #cccccc; opacity: 0.55; transition: opacity 0.3s; display: flex; align-items: center; gap: 0.5rem; font-family: var(--mono); }
+    .project-card:hover .click-hint { opacity: 1; }
+    .project-card .click-hint .blink-cursor { animation: blink 1s steps(1) infinite; }
+
+    /* modal shared */
+    .project-modal-overlay, .cert-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(14px);
+      z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 2rem;
+      opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .project-modal-overlay.active, .cert-modal-overlay.active { opacity: 1; visibility: visible; }
+    .project-modal-content {
+      background: #111111; max-width: 750px; width: 100%; max-height: 85vh;
+      border-radius: 24px; padding: 2.4rem; position: relative;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.9); border: 1px solid rgba(255, 255, 255, 0.15);
+      transform: scale(0.94) translateY(16px); transition: transform 0.4s cubic-bezier(.2,.9,.3,1.1); overflow-y: auto;
+    }
+    .project-modal-overlay.active .project-modal-content { transform: scale(1) translateY(0); }
+    .project-modal-close, .cert-modal-close {
+      position: absolute; top: 18px; right: 18px; background: #ffffff; border: 2px solid rgba(0,0,0,0.2);
+      color: #000000; width: 44px; height: 44px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3);
+      transition: 0.25s; z-index: 10; font-weight: bold;
+    }
+    .project-modal-close:hover, .cert-modal-close:hover { background: #cccccc; transform: rotate(90deg) scale(1.05); border-color: #ffffff; }
+    .project-modal-icon { font-size: 3.2rem; color: #ffffff; margin-bottom: 1rem; display: block; }
+    .project-modal-title { font-size: 2.2rem; margin-bottom: 0.3rem; background: linear-gradient(135deg,#ffffff 30%,#cccccc 75%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .project-modal-date { font-family: var(--mono); color: #ffffff; font-size: 0.95rem; font-weight: 600; margin-bottom: 1.2rem; display: block; }
+    .project-modal-description { color: #b3b3b3; font-size: 1.08rem; line-height: 1.8; margin-bottom: 1.5rem; }
+    .project-modal-details { background: rgba(255, 255, 255, 0.03); border-radius: 14px; padding: 1.4rem; border-left: 3px solid #ffffff; }
+    .project-modal-details h4 { color: #ffffff; font-size: 1.05rem; margin-bottom: 0.7rem; }
+    .project-modal-details ul { list-style: none; color: #b3b3b3; }
+    .project-modal-details ul li { padding: 0.4rem 0 0.4rem 1.7rem; position: relative; font-size: 0.98rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .project-modal-details ul li:last-child { border-bottom: none; }
+    .project-modal-details ul li::before { content: '▸'; position: absolute; left: 0; color: #ffffff; font-weight: 700; }
+    .project-modal-tech { margin-top: 1.4rem; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .project-modal-tech span { font-family: var(--mono); background: rgba(255, 255, 255, 0.08); color: #cccccc; padding: 0.3rem 0.9rem; border-radius: 30px; font-size: 0.78rem; border: 1px solid rgba(255, 255, 255, 0.2); }
+
+    /* GitHub button styling */
+    .github-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.5rem;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      border: 2px solid #ffffff;
+    }
+    .github-btn:hover {
+      background: transparent;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
+    }
+    .github-btn i {
+      font-size: 1.2rem;
+    }
+
+    /* certificates — timeline */
+    .certificates-section { background: #000000; }
+    .cert-timeline { position: relative; margin-top: 3rem; padding-left: 2rem; }
+    .cert-timeline::before { content: ''; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(to bottom, #ffffff, rgba(255,255,255,0.05)); }
+    .cert-row {
+      position: relative; display: flex; align-items: center; gap: 1.6rem; padding: 1.2rem 0;
+    }
+    .cert-row::before {
+      content: ''; position: absolute; left: -2.05rem; top: 50%; transform: translateY(-50%);
+      width: 12px; height: 12px; border-radius: 50%; background: #000000; border: 2px solid #ffffff;
+      z-index: 1;
+    }
+    .cert-row.in-view::before { background: #ffffff; border-color: #ffffff; animation: commitPing 0.7s ease-out; }
+    @keyframes commitPing { 0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); } 100% { box-shadow: 0 0 0 11px rgba(255,255,255,0); } }
+    .cert-card {
+      background: #111111; border-radius: 16px; padding: 1.4rem 1.6rem; border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex; align-items: center; gap: 1.2rem; width: 100%; cursor: pointer; transition: all 0.3s;
+      clip-path: inset(0 100% 0 0);
+    }
+    .cert-row.in-view .cert-card { animation: printLine 0.5s steps(20) 0.1s forwards; }
+    .cert-card:hover { background: #1a1a1a; border-color: rgba(255, 255, 255, 0.3); transform: translateX(4px); }
+    .certificate-icon { font-size: 2rem; color: #ffffff; flex-shrink: 0; }
+    .cert-card h3 { font-size: 1.15rem; color: #ffffff; }
+    .cert-card .issuer { color: #cccccc; font-weight: 600; font-size: 0.82rem; }
+    .cert-card .year { font-family: var(--mono); color: #b3b3b3; font-size: 0.82rem; margin-left: auto; padding-left: 1rem; flex-shrink: 0; }
+    .cert-card .credential-id {
+      background: rgba(255, 255, 255, 0.08); padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.72rem;
+      font-family: var(--mono); color: #b3b3b3; border: 1px dashed rgba(255, 255, 255, 0.3);
+    }
+    .cert-modal-content {
+      background: #111111; max-width: 900px; width: 100%; max-height: 85vh; border-radius: 22px;
+      padding: 1.5rem; position: relative; box-shadow: 0 30px 50px rgba(0,0,0,0.8); border: 1px solid rgba(255, 255, 255, 0.1);
+      transform: scale(0.9); transition: transform 0.3s cubic-bezier(.2,.9,.3,1.1);
+    }
+    .cert-modal-overlay.active .cert-modal-content { transform: scale(1); }
+    .cert-modal-image-wrapper { border-radius: 14px; overflow: hidden; max-height: 65vh; background: #000000; }
+    .cert-modal-image { width: 100%; height: auto; display: block; object-fit: contain; max-height: 65vh; }
+    .cert-modal-caption { margin-top: 1rem; text-align: center; color: #b3b3b3; }
+    
+    /* View PDF button styling */
+    .cert-view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      border: 2px solid #ffffff;
+    }
+    .cert-view-btn:hover {
+      background: transparent;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
+    }
+    .cert-view-btn i {
+      font-size: 1.2rem;
+    }
+
+    /* education section */
+    .education-section { background: #0a0a0a; }
+    .edu-timeline { position: relative; margin-top: 2.5rem; padding-left: 2.2rem; }
+    .edu-timeline::before { content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: rgba(255,255,255,0.15); }
+    .edu-item { position: relative; margin-bottom: 2rem; padding-left: 2rem; }
+    .edu-item::before {
+      content: ''; position: absolute; left: -2.05rem; top: 0.4rem; width: 14px; height: 14px;
+      background: #000000; border: 2px solid #ffffff; border-radius: 50%;
+    }
+    .edu-item .edu-year { font-family: var(--mono); font-size: 0.9rem; color: #ffffff; font-weight: 600; margin-bottom: 0.3rem; }
+    .edu-item h3 { font-size: 1.4rem; color: #ffffff; margin-bottom: 0.3rem; }
+    .edu-item .edu-institution { color: #cccccc; font-weight: 500; margin-bottom: 0.5rem; }
+    .edu-item p { color: #b3b3b3; max-width: 600px; }
+
+    /* contact */
+    .contact-section { background: #000000; }
+    .contact-links { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-top: 2rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.7rem; background: #111111; padding: 0.85rem 1.7rem;
+      border-radius: 8px; text-decoration: none; color: #b3b3b3; border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+      font-family: var(--mono); font-size: 0.92rem;
+    }
+    .contact-link i { font-size: 1.2rem; color: #ffffff; }
+    .contact-link:hover { background: rgba(255, 255, 255, 0.05); color: #ffffff; border-color: #ffffff; }
+
+    footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #666666; font-size: 0.88rem; font-family: var(--mono); }
+
+    /* ========== RESPONSIVE: mobile nav ========== */
+    @media (max-width: 860px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-toggle { display: flex; }
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.96);
+        backdrop-filter: blur(12px);
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 0;
+        gap: 1.8rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        clip-path: inset(0 0 100% 0);
+        transition: clip-path 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        z-index: 999;
+        pointer-events: none;
+      }
+      .nav-links.open {
+        clip-path: inset(0 0 0 0);
+        pointer-events: all;
+      }
+      .nav-links a {
+        font-size: 1.2rem;
+        padding: 0.3rem 0;
+        width: 100%;
+        text-align: center;
+      }
+      .nav-links a::after { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .cursor-dot, .cursor-ring, .glow-light { display: none; }
+      .nav-container { padding: 0.9rem 1.5rem; }
+      .hero-text h1 { font-size: 2.7rem; }
+      .hero-role { font-size: 1.2rem; }
+      .section-title { font-size: 2.1rem; }
+      .portrait-wrap, .portrait-circle { width: 200px; height: 200px; }
+      .project-modal-content { padding: 1.7rem; margin: 1rem; }
+      .project-modal-title { font-size: 1.7rem; }
+      .cert-row { gap: 1rem; padding-left: 0; }
+      .cert-card { flex-wrap: wrap; }
+      .cert-card .year { margin-left: 0; padding-left: 0; }
+      .edu-item { padding-left: 1rem; }
+      .github-btn, .cert-view-btn { padding: 0.7rem 1.2rem; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="glow-light" id="glowLight"></div>
+<div class="cursor-caret" id="cursorCaret"></div>
+<span class="cursor-tag" id="cursorTag"></span>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo">Naresh<span class="dot"> </span>Bhat</div>
+    <!-- Hamburger toggle -->
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certificates">Certificates</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="home">
+  <canvas id="particle-canvas"></canvas>
+  <div class="container hero-content">
+    <div class="hero-text">
+      <span class="tag-label greet boot-line">Hello there, I'm</span>
+      <h1 id="heroName">&nbsp;</h1>
+      <div class="hero-role"><span id="typedRole"></span><span class="caret"></span></div>
+      <p class="lede boot-line">Building digital experiences that combine clean code with aesthetic design. I'm passionate about turning ideas into interactive reality.</p>
+      <div class="btn-group boot-line">
+        <a href="#projects" class="btn btn-primary"><i class="fas fa-rocket"></i> View work</a>
+        <a href="#contact" class="btn btn-outline"><i class="fas fa-envelope"></i> Contact me</a>
+        <a href="btech CV.pdf" target="_blank" class="btn btn-cv"><i class="fas fa-file-pdf"></i> View CV</a>
+      </div>
+    </div>
+    <div class="hero-portrait">
+      <div class="portrait-wrap">
+        <div class="portrait-ring"></div>
+        <div class="portrait-circle">
+          <img src="portimg.png" alt="Naresh Bhat portrait">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>scroll</span><div class="wheel"></div></div>
+</section>
+
+<!-- Stats -->
+<section class="stats-strip">
+  <div class="container stats-grid">
+    <div class="stat"><div class="stat-num" data-count="4">0</div><div class="stat-label">Projects shipped</div></div>
+    <div class="stat"><div class="stat-num" data-count="4">0</div><div class="stat-label">Certifications</div></div>
+    <div class="stat"><div class="stat-num" data-count="4"><span class="plus">+</span>0</div><div class="stat-label">Languages spoken</div></div>
+    <div class="stat"><div class="stat-num" data-count="1">0</div><div class="stat-label">German in progress</div></div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about-section" id="about">
+  <div class="container">
+    <h2 class="section-title"><span class="brace">{</span>About<span class="brace">}</span></h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="lead-line">Turning complex problems into simple, beautiful solutions.</p>
+        <p>
+          I'm a Computer Science Engineering student at Lovely Professional University,
+          driven by creativity and ideation. I enjoy building full-stack applications,
+          from smart budget trackers to e‑commerce platforms.
+        </p>
+        <div class="lang-chips">
+          <span>English</span><span>Nepali</span><span>Hindi</span><span>Punjabi (basic)</span><span>German (learning)</span>
+        </div>
+      </div>
+      <div class="skills-list">
+        <h3><i class="fas fa-cog"></i>Skills</h3>
+        <div class="skill-item"><span>HTML / CSS</span> <span class="skill-pct">95%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+        <div class="skill-item"><span>JavaScript / PHP</span> <span class="skill-pct">90%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+        <div class="skill-item"><span>Python / Java</span> <span class="skill-pct">85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+        <div class="skill-item"><span>MERN Stack</span> <span class="skill-pct">80%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+        <div class="skill-item"><span>UI/UX &amp; Tools</span> <span class="skill-pct">75%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Education Section (updated from CV) -->
+<section class="education-section" id="education">
+  <div class="container">
+    <h2 class="section-title"><span class="brace">{</span>Education<span class="brace">}</span></h2>
+    <p style="color:#b3b3b3; max-width:600px; margin-bottom:1rem;">My academic journey and foundations.</p>
+    <div class="edu-timeline">
+      <div class="edu-item">
+        <div class="edu-year">2026 – 2029 (expected)</div>
+        <h3>Bachelor of Technology (B.Tech) – Computer Science & Engineering</h3>
+        <div class="edu-institution">Lovely Professional University, Phagwara, Punjab</div>
+        <p>Pursuing Bachelor of Technology with focus on full-stack development, algorithms, and modern web technologies.</p>
+      </div>
+      <div class="edu-item">
+        <div class="edu-year">2023 – 2026</div>
+        <h3>Diploma in Computer Science & Engineering</h3>
+        <div class="edu-institution">Lovely Professional University, Phagwara, Punjab</div>
+        <p>Completed diploma program with a CGPA of 7.44. Gained foundational knowledge in programming, databases, and software development.</p>
+      </div>
+      <div class="edu-item">
+        <div class="edu-year">2022 – 2023</div>
+        <h3>Secondary Education (10th)</h3>
+        <div class="edu-institution">Kanchanjunga English Sec School, Kanchanpur, Nepal</div>
+        <p>Graduated with a GPA of 3.2. Participated in science exhibitions and coding clubs, sparking interest in technology.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="container">
+    <h2 class="section-title"><span class="brace">{</span>Projects<span class="brace">}</span></h2>
+    <p style="color:#b3b3b3; max-width:600px; margin-bottom:0.5rem;">Click on any project card to view complete details.</p>
+    <div class="projects-grid">
+      <!-- Sportswear E-commerce Website (new) -->
+      <div class="project-card" data-project="sportswear">
+        <div class="project-icon"><i class="fas fa-tshirt"></i></div>
+        <h3>Sportswear E‑commerce Website</h3>
+        <div class="project-date">Jun '24</div>
+        <p>Responsive sportswear e‑commerce platform with user authentication, product search/filtering, shopping cart, and admin panel for order management.</p>
+        <div class="click-hint">$ view --project<span class="blink-cursor">_</span></div>
+      </div>
+      <div class="project-card" data-project="food">
+        <div class="project-icon"><i class="fas fa-utensils"></i></div>
+        <h3>Food Ordering Website</h3>
+        <div class="project-date">Jun '25</div>
+        <p>Digital food ordering platform for university stalls enabling students to browse and order food online with database integration.</p>
+        <div class="click-hint">$ view --project<span class="blink-cursor">_</span></div>
+      </div>
+      <div class="project-card" data-project="tts">
+        <div class="project-icon"><i class="fas fa-microphone"></i></div>
+        <h3>Text‑to‑Speech Recognition</h3>
+        <div class="project-date">Jun '25</div>
+        <p>Python application that converts user-provided text into natural-sounding speech in real-time using pyttsx3 library.</p>
+        <div class="click-hint">$ view --project<span class="blink-cursor">_</span></div>
+      </div>
+      <div class="project-card" data-project="ecommerce">
+        <div class="project-icon"><i class="fas fa-store"></i></div>
+        <h3>E‑Commerce Website</h3>
+        <div class="project-date">Jul '26</div>
+        <p>Full-stack MERN platform for ordering household products with RESTful APIs, authentication, and shopping cart functionality.</p>
+        <div class="click-hint">$ view --project<span class="blink-cursor">_</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Project Detail Modal -->
+<div class="project-modal-overlay" id="projectModal">
+  <div class="project-modal-content">
+    <button class="project-modal-close" id="projectModalClose"><i class="fas fa-times"></i></button>
+    <span class="project-modal-icon" id="modalProjectIcon"><i class="fas fa-tshirt"></i></span>
+    <h2 class="project-modal-title" id="modalProjectTitle">Sportswear E‑commerce Website</h2>
+    <span class="project-modal-date" id="modalProjectDate">Jun '24</span>
+    <p class="project-modal-description" id="modalProjectDescription">Description goes here.</p>
+    <div class="project-modal-details">
+      <h4><i class="fas fa-list-check" style="color:#ffffff; margin-right:8px;"></i>Key features</h4>
+      <ul id="modalProjectFeatures"><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>
+    </div>
+    <div class="project-modal-tech" id="modalProjectTech"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+    <a href="https://github.com/Naresh-1q" target="_blank" class="github-btn" id="modalGithubBtn">
+      <i class="fab fa-github"></i> View on GitHub
+    </a>
+  </div>
+</div>
+
+<!-- Certificates -->
+<section class="certificates-section" id="certificates">
+  <div class="container">
+    <h2 class="section-title"><span class="brace">{</span>Certificates<span class="brace">}</span></h2>
+    <p style="color:#b3b3b3; max-width:600px; margin-bottom:1rem;">Professional credentials and workshops that sharpen my skills, in the order I earned them.</p>
+    <div class="cert-timeline">
+      <div class="cert-row">
+        <div class="cert-card" data-cert="MERN Stack (6 months) – ISO 9001" data-image="6months.jpeg" data-pdf="6months.pdf">
+          <div class="certificate-icon"><i class="fab fa-react"></i></div>
+          <div>
+            <h3>MERN Stack (6 months)</h3>
+            <span class="issuer">ISO 9001 Certified</span>
+          </div>
+          <span class="credential-id">ISO-MERN-6M</span>
+          <span class="year">2026</span>
+        </div>
+      </div>
+      <div class="cert-row">
+        <div class="cert-card" data-cert="Cyber Security Hackfest" data-image="cyber.jpeg" data-pdf="cyber.pdf">
+          <div class="certificate-icon"><i class="fas fa-shield-alt"></i></div>
+          <div>
+            <h3>Cyber Security Hackfest</h3>
+            <span class="issuer">Security Summit</span>
+          </div>
+          <span class="credential-id">CS-HF-884</span>
+          <span class="year">2025</span>
+        </div>
+      </div>
+      <div class="cert-row">
+        <div class="cert-card" data-cert="Full Stack Development (45 days) – ISO 9001" data-image="45days.jpeg" data-pdf="45days.pdf">
+          <div class="certificate-icon"><i class="fas fa-certificate"></i></div>
+          <div>
+            <h3>Full Stack Development (45 days)</h3>
+            <span class="issuer">ISO 9001 Certified</span>
+          </div>
+          <span class="credential-id">ISO-FS-45D</span>
+          <span class="year">2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Certificate Modal -->
+<div class="cert-modal-overlay" id="certModal">
+  <div class="cert-modal-content">
+    <button class="cert-modal-close" id="certModalClose"><i class="fas fa-times"></i></button>
+    <div class="cert-modal-image-wrapper">
+      <img src="" alt="Certificate preview" class="cert-modal-image" id="certModalImage">
+    </div>
+    <div class="cert-modal-caption" id="certModalCaption"></div>
+    <div style="text-align: center;">
+      <a href="#" class="cert-view-btn" id="certViewBtn" target="_blank">
+        <i class="fas fa-file-pdf"></i> View PDF
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Contact -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <h2 class="section-title"><span class="brace">{</span>Connect<span class="brace">}</span></h2>
+    <p style="color:#b3b3b3; max-width:600px; margin-bottom:2rem;">I'm always open to new opportunities, collaborations, or just a friendly chat. Reach out through any of the channels below.</p>
+    <div class="contact-links">
+      <a href="mailto:narace000@gmail.com" class="contact-link"><i class="fas fa-envelope"></i> narace000@gmail.com</a>
+      <a href="https://github.com/Naresh-1q" target="_blank" class="contact-link"><i class="fab fa-github"></i> Naresh-1q</a>
+      <a href="https://www.linkedin.com/in/narace-bhat/" target="_blank" class="contact-link"><i class="fab fa-linkedin"></i> Naresh Bhat</a>
+      <a href="https://www.instagram.com/xettryy.12?igsi=bjY0bWxodHI4dDlh" target="_blank" class="contact-link"><i class="fab fa-instagram"></i> xettryy.12</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2024 Naresh Bhat. All rights reserved.</p>
+</footer>
+
+<script>
+(function () {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
+  /* ---------- mobile nav toggle ---------- */
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      this.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navbar')) {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('open');
+      }
+    });
+  }
+
+  /* ---------- smooth scroll for nav links ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const id = this.getAttribute('href');
+      if (id === '#') return;
+      const target = document.querySelector(id);
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  /* ---------- scroll progress bar ---------- */
+  const progressBar = document.getElementById('scrollProgress');
+  function updateProgress() {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progressBar.style.width = scrolled + '%';
+  }
+  document.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  /* ---------- glow light + custom cursor: terminal caret ---------- */
+  const glowLight = document.getElementById('glowLight');
+  const caret = document.getElementById('cursorCaret');
+  const tag = document.getElementById('cursorTag');
+
+  if (isTouch) {
+    document.body.classList.add('no-cursor');
+  } else {
+    document.addEventListener('mousemove', e => {
+      glowLight.style.transform = `translate(${e.clientX - 300}px, ${e.clientY - 300}px)`;
+      caret.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`;
+      tag.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(12px, -6px)`;
+    });
+    
+    document.addEventListener('mouseenter', () => {
+      glowLight.classList.remove('hidden');
+    });
+    
+    document.addEventListener('mouseleave', () => {
+      glowLight.classList.add('hidden');
+    });
+    
+    document.querySelectorAll('.project-card, .cert-card, .contact-link, .btn, .github-btn, .cert-view-btn').forEach(el => {
+      el.addEventListener('mouseenter', (event) => { 
+        caret.classList.add('hovering'); 
+        tag.textContent = 'open'; 
+        tag.classList.add('visible'); 
+        glowLight.style.transform = `translate(${event.clientX - 400}px, ${event.clientY - 400}px)`;
+        glowLight.style.width = '800px';
+        glowLight.style.height = '800px';
+      });
+      el.addEventListener('mouseleave', () => { 
+        caret.classList.remove('hovering'); 
+        tag.classList.remove('visible'); 
+        glowLight.style.width = '600px';
+        glowLight.style.height = '600px';
+      });
+    });
+    document.querySelectorAll('a:not(.contact-link), button').forEach(el => {
+      el.addEventListener('mouseenter', () => caret.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => caret.classList.remove('hovering'));
+    });
+  }
+
+  /* ---------- hero particle constellation ---------- */
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  const hero = document.querySelector('.hero');
+  let particles = [];
+  let mouseX = -9999, mouseY = -9999;
+
+  function resizeCanvas() {
+    canvas.width = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+    const count = Math.min(70, Math.floor((canvas.width * canvas.height) / 18000));
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 1.6 + 0.6
+    }));
+  }
+  window.addEventListener('resize', resizeCanvas);
+  hero.addEventListener('mousemove', e => {
+    const rect = hero.getBoundingClientRect();
+    mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+  });
+  hero.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      const dx = p.x - mouseX, dy = p.y - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) { p.x += dx / dist * 0.6; p.y += dy / dist * 0.6; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.fill();
+    }
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const a = particles[i], b = particles[j];
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d < 110) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(255,255,255,${0.15 * (1 - d / 110)})`;
+          ctx.lineWidth = 1;
+          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+    }
+    if (!reduceMotion) requestAnimationFrame(drawParticles);
+  }
+  resizeCanvas();
+  if (!reduceMotion) drawParticles(); else { drawParticles(); }
+
+  /* ---------- hero boot sequence ---------- */
+  const roles = ['Creative Web Developer & Designer', 'Full-Stack Engineer', 'UI/UX Enthusiast', 'CS Engineering Student'];
+  const typedEl = document.getElementById('typedRole');
+  const nameEl = document.getElementById('heroName');
+  const REAL_NAME = 'Naresh Bhat';
+  const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*/\\<>{}01';
+
+  function startRoleTyping() {
+    if (reduceMotion) { typedEl.textContent = roles[0]; return; }
+    let ri = 0, ci = 0, deleting = false;
+    function typeLoop() {
+      const word = roles[ri];
+      if (!deleting) {
+        ci++;
+        typedEl.textContent = word.slice(0, ci);
+        if (ci === word.length) { deleting = true; setTimeout(typeLoop, 1400); return; }
+      } else {
+        ci--;
+        typedEl.textContent = word.slice(0, ci);
+        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; }
+      }
+      setTimeout(typeLoop, deleting ? 35 : 65);
+    }
+    typeLoop();
+  }
+
+  function decodeName(onDone) {
+    nameEl.classList.add('decoding');
+    nameEl.style.opacity = 1;
+    const len = REAL_NAME.length;
+    let resolved = 0;
+    const frame = () => {
+      let out = '';
+      for (let i = 0; i < len; i++) {
+        if (i < resolved) out += REAL_NAME[i];
+        else if (REAL_NAME[i] === ' ') out += ' ';
+        else out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      }
+      nameEl.textContent = out;
+      if (resolved < len) { requestAnimationFrame(frame); if (Math.random() > 0.55) resolved++; }
+      else { nameEl.textContent = REAL_NAME; nameEl.classList.remove('decoding'); onDone && onDone(); }
+    };
+    frame();
+  }
+
+  if (reduceMotion) {
+    nameEl.style.opacity = 1;
+    nameEl.textContent = REAL_NAME;
+    document.querySelectorAll('.boot-line').forEach(el => el.classList.add('printed'));
+    startRoleTyping();
+  } else {
+    decodeName(() => {
+      document.querySelectorAll('.boot-line').forEach((el, i) => {
+        setTimeout(() => el.classList.add('printed'), i * 160);
+      });
+      setTimeout(startRoleTyping, 550);
+    });
+  }
+
+  /* ---------- animated stat counters ---------- */
+  const statNums = document.querySelectorAll('.stat-num');
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.getAttribute('data-count'), 10);
+        const plusEl = el.querySelector('.plus');
+        let cur = 0;
+        const step = Math.max(1, Math.ceil(target / 30));
+        const timer = setInterval(() => {
+          cur += step;
+          if (cur >= target) { cur = target; clearInterval(timer); }
+          el.textContent = cur;
+          if (plusEl) { el.textContent = ''; el.appendChild(plusEl); el.append(cur); }
+        }, 40);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.6 });
+  statNums.forEach(el => statObserver.observe(el));
+
+  /* ---------- skill bars fill ---------- */
+  const skillFills = document.querySelectorAll('.skill-fill');
+  const skillObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fill = entry.target;
+        fill.style.width = fill.getAttribute('data-width') + '%';
+        skillObserver.unobserve(fill);
+      }
+    });
+  }, { threshold: 0.5 });
+  skillFills.forEach(f => skillObserver.observe(f));
+
+  /* ---------- certificate timeline reveal ---------- */
+  const certRows = document.querySelectorAll('.cert-row');
+  const certObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in-view'); });
+  }, { threshold: 0.3 });
+  certRows.forEach(r => certObserver.observe(r));
+
+  /* ---------- project data & modal ---------- */
+  const projectData = {
+    sportswear: {
+      icon: '<i class="fas fa-tshirt"></i>', 
+      title: 'Sportswear E‑commerce Website', 
+      date: "Jun '24",
+      description: 'Developed a responsive Sportswear e-commerce Website using HTML, CSS, JS, PHP and Firebase Storage for browsing sports products. The platform provides a complete online shopping experience with user authentication and order management.',
+      features: [
+        'Implemented user authentication, product search and filtering, and shopping cart functionality',
+        'Integrated admin panel for comprehensive order management and product oversight',
+        'Used PHP and Firebase Storage to manage user accounts, product data, and customer orders for a smooth and user-friendly shopping experience'
+      ],
+      tech: ['HTML', 'CSS', 'JavaScript', 'PHP', 'Firebase Storage'],
+      github: 'https://github.com/Naresh-1q/INDUSRIAL/tree/main/Industrial'
+    },
+    food: {
+      icon: '<i class="fas fa-utensils"></i>', title: 'Food Ordering Website', date: "Jun '25",
+      description: 'Developed a digital food ordering platform for university stalls using HTML, CSS, JavaScript, PHP, and MySQL. The platform enables students to conveniently browse and order food online.',
+      features: ['Integrated MySQL database for managing food items, customer orders, and order details', 'Implemented efficient data storage and retrieval for seamless ordering experience', 'Designed responsive user interface with interactive features to streamline the ordering process'],
+      tech: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
+      github: 'https://github.com/Naresh-1q/CA2PHP/tree/main/PHP_PROJECT'
+    },
+    tts: {
+      icon: '<i class="fas fa-microphone"></i>', title: 'Text-to-Speech Recognition', date: "Jun '25",
+      description: 'Developed a Text-to-Speech application using Python that converts user-provided text into natural-sounding speech. The application demonstrates practical implementation of Python programming and speech synthesis libraries.',
+      features: ['Utilized pyttsx3 library for speech synthesis and real-time audio output', 'Designed simple user interface with text input, speech conversion, and playback controls', 'Demonstrated practical application of Python programming and third-party libraries'],
+      tech: ['Python', 'pyttsx3'],
+      github: 'https://github.com/Naresh-1q/PYTHON/blob/main/hello.py'
+    },
+    ecommerce: {
+      icon: '<i class="fas fa-store"></i>', title: 'E-Commerce Website', date: "Jul '26",
+      description: 'Developed a full-stack E-Commerce platform using the MERN stack (MongoDB, Express.js, React.js, and Node.js) for ordering household and other products. The platform provides a complete online shopping experience.',
+      features: ['Designed and integrated MongoDB database for efficient management of products, users, and orders', 'Implemented RESTful APIs, user authentication, product management, and shopping cart functionality', 'Delivered responsive and user-friendly online shopping experience with modern web technologies'],
+      tech: ['MongoDB', 'Express.js', 'React.js', 'Node.js', 'MERN Stack'],
+      github: 'https://github.com/Naresh-1q/ecommerce-website'
+    }
+  };
+
+  const projectModal = document.getElementById('projectModal');
+  const projectModalClose = document.getElementById('projectModalClose');
+  const modalGithubBtn = document.getElementById('modalGithubBtn');
+
+  function openProjectModal(key) {
+    const data = projectData[key];
+    if (!data) return;
+    document.getElementById('modalProjectIcon').innerHTML = data.icon;
+    document.getElementById('modalProjectTitle').textContent = data.title;
+    document.getElementById('modalProjectDate').textContent = data.date;
+    document.getElementById('modalProjectDescription').textContent = data.description;
+    const list = document.getElementById('modalProjectFeatures');
+    list.innerHTML = '';
+    data.features.forEach(f => { const li = document.createElement('li'); li.textContent = f; list.appendChild(li); });
+    const tech = document.getElementById('modalProjectTech');
+    tech.innerHTML = '';
+    data.tech.forEach(t => { const span = document.createElement('span'); span.textContent = t; tech.appendChild(span); });
+    
+    if (data.github) {
+      modalGithubBtn.href = data.github;
+      modalGithubBtn.style.display = 'inline-flex';
+    } else {
+      modalGithubBtn.style.display = 'none';
+    }
+    
+    projectModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeProjectModal() { projectModal.classList.remove('active'); document.body.style.overflow = ''; }
+
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('click', function () { openProjectModal(this.getAttribute('data-project')); });
+  });
+  projectModalClose.addEventListener('click', closeProjectModal);
+  projectModal.addEventListener('click', e => { if (e.target === projectModal) closeProjectModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && projectModal.classList.contains('active')) closeProjectModal(); });
+
+  /* ---------- certificate modal with "View PDF" button ---------- */
+  const certModal = document.getElementById('certModal');
+  const certModalImage = document.getElementById('certModalImage');
+  const certModalCaption = document.getElementById('certModalCaption');
+  const certModalClose = document.getElementById('certModalClose');
+  const certViewBtn = document.getElementById('certViewBtn');
+
+  function openCertModal(card) {
+    const src = card.getAttribute('data-image');
+    const name = card.getAttribute('data-cert') || 'Certificate';
+    const pdfPath = card.getAttribute('data-pdf');
+    
+    if (src) {
+      certModalImage.src = src; 
+      certModalImage.alt = name + ' preview'; 
+      certModalCaption.textContent = name;
+      
+      if (pdfPath) {
+        certViewBtn.href = pdfPath;
+        certViewBtn.style.display = 'inline-flex';
+      } else {
+        certViewBtn.style.display = 'none';
+      }
+      
+      certModal.classList.add('active'); 
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  
+  function closeCertModal() {
+    certModal.classList.remove('active'); 
+    document.body.style.overflow = '';
+    setTimeout(() => { 
+      certModalImage.src = ''; 
+      certModalCaption.textContent = ''; 
+      certViewBtn.style.display = 'none';
+    }, 300);
+  }
+  
+  document.querySelectorAll('.cert-card').forEach(card => card.addEventListener('click', function () { openCertModal(this); }));
+  certModalClose.addEventListener('click', closeCertModal);
+  certModal.addEventListener('click', e => { if (e.target === certModal) closeCertModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && certModal.classList.contains('active')) closeCertModal(); });
+
+  console.log('%c✨ Naresh Bhat Portfolio — Sportswear E-commerce added, Smart Budget Tracker removed', 'color: #ffffff; font-size: 14px; font-weight: bold;');
+})();
+</script>
+</body>
+</html>
